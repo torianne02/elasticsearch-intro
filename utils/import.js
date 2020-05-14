@@ -1,6 +1,6 @@
 'use strict';
 
-const csv = require('csvtojson');
+const csv = require('csvtojson/v1');
 const ELASTICSEARCH = require('elasticsearch');
 const Episodes = `${process.env.PWD}/dataset/simpsons_episodes.csv`;
 const ESCLUSTER = 'http://localhost:9200';
@@ -9,7 +9,7 @@ const TYPE = 'episode';
 const BULK = [];
 const CLIENT = new ELASTICSEARCH.Client({
     host: ESCLUSTER,
-    apiVersion: '5.0'
+    apiVersion: '7.6'
 });
 
 console.log('Bulk import into Elasticsearch');
