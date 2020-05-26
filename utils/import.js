@@ -8,27 +8,27 @@ const INDEX = 'simpsons';
 const TYPE = 'episode';
 const BULK = [];
 const CLIENT = new ELASTICSEARCH.Client({
-    host: ESCLUSTER,
-    apiVersion: '7.6'
+  host: ESCLUSTER,
+  apiVersion: '7.6'
 });
 
 console.log('Bulk import into Elasticsearch');
 csv()
-    .fromFile(Episodes)
-    .on('json',(obj) => {
-        BULK.push(
-            {index: {_index: INDEX, _type: TYPE, _id: obj.id } },
-            obj
-        );
-        console.log(`Adding ${obj.id} to array`);
+  .fromFile(Episodes)
+  .on('json',(obj) => {
+    BULK.push(
+      {index: {_index: INDEX, _type: TYPE, _id: obj.id } },
+      obj
+    );
+    console.log(`Adding ${obj.id} to array`);
+  })
+  .on('end',() => {
+    CLIENT.bulk({
+      body: BULK
+    }, (err) => {
+      if (err) {
+        console.log(err);
+      } 
     })
-    .on('end',() => {
-        CLIENT.bulk({
-            body: BULK
-        }, (err) => {
-            if (err) {
-                console.log(err);
-            } 
-        })
-        console.log('Processing complete');
-    });
+    console.log('Processing complete');
+  });
